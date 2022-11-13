@@ -34,6 +34,10 @@ io.on('connection', (socket) => {
 		socket.to(data.inviter).emit('invitation-rejected', data)
 	})
 
+	socket.on('invitation-rejected-because-playing-with-other', (data) => {
+		socket.to(data.inviter).emit('invitation-rejected-because-playing-with-other', data)
+	})
+
 	socket.on('delete room', (room) => {
 		let deletedIndex = rooms.map(set => set.name).indexOf(room);
 		rooms.splice(deletedIndex,1);
@@ -48,9 +52,9 @@ io.on('connection', (socket) => {
 		socket.to(data.enemy).emit('receive-begin-word-from-enemy', data)
 	})
 
-	// socket.on('changePlayer', myEnemy => {
-	// 	socket.to(myEnemy).emit('changePlayer')
-	// })
+	socket.on('my-enemy-win', myEnemy => {
+		socket.to(myEnemy).emit('you-win')
+	})
 
 	socket.on("disconnect", (reason) => {
 		rooms = rooms.filter(room => room.id !== socket.id);
